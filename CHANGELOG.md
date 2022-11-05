@@ -30,6 +30,8 @@ Canonical reference for changes, improvements, and bugfixes for Boundary.
     string after a specified substring; this is useful for pulling an user/account name from an email address. In the following example it uses the account email can be any other parameter:
     
     * `{{ truncateFrom .Account.Email "@" }}`: this would turn `foo@example.com` into `foo`
+* Connect Parameters:
+  * Added "helm" style parameter for connect kube command
 
 ### Bug Fixes
 

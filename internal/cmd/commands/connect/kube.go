@@ -22,7 +22,7 @@ func kubeOptions(c *Command, set *base.FlagSets) {
 		EnvVar:     fmt.Sprintf("BOUNDARY_CONNECT_%s_STYLE", strings.ToUpper(c.Func)),
 		Completion: complete.PredictSet("kubectl"),
 		Default:    "kubectl",
-		Usage:      `Specifies how the CLI will attempt to invoke a Kubernetes client. This will also set a suitable default for -exec if a value was not specified. Currently-understood values are "kubectl".`,
+		Usage:      `Specifies how the CLI will attempt to invoke a Kubernetes client. This will also set a suitable default for -exec if a value was not specified. Currently-understood values are "kubectl" and "helm".`,
 	})
 
 	f.StringVar(&base.StringVar{
@@ -71,6 +71,12 @@ func (f *kubeFlags) buildArgs(c *Command, port, ip, addr string) ([]string, erro
 			args = append(args, "--tls-server-name", host)
 		}
 		args = append(args, "--server", fmt.Sprintf("%s://%s", f.flagKubeScheme, addr))
+	case "helm":
+		if host != "" && f.flagKubeScheme == "https" {
+			host = strings.TrimSuffix(host, "/")
+			args = append(args, "--kube-tls-server-name", host)
+		}
+		args = append(args, "--kube-apiserver", fmt.Sprintf("%s://%s", f.flagKubeScheme, addr))
 	}
 	return args, nil
 }
